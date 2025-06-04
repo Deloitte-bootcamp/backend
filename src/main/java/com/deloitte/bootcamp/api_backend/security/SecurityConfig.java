@@ -18,32 +18,38 @@ public class SecurityConfig {
 
     private JwtFilter jwtFilter;
 
-    // Configuração de segurança para a aplicação e os endpoints
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/user/register").permitAll()
+                        .requestMatchers(
+                                "/auth/login",
+                                "/user/register",
+                                "/reset/request",
+                                "/reset/change",
+                                // Libera Swagger/OpenAPI COMPLETO
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         .requestMatchers("/auth/me").authenticated()
-                        .requestMatchers("/reset/request", "/reset/change").permitAll()
                         .requestMatchers("/cliente/**").hasRole("CLIENTE")
                         .requestMatchers("/profissional/**").hasRole("PROFISSIONAL")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
 
-    // Decodificador para senhas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Configuração CORS para permitir requisições de diferentes origens
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
