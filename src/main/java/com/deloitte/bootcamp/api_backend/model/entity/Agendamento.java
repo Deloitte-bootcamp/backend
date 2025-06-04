@@ -4,7 +4,9 @@ package com.deloitte.bootcamp.api_backend.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -26,8 +28,9 @@ public class Agendamento {
     @JoinColumn(name = "servico_id")
     private Servico servico;
 
-    private LocalDateTime dataHoraInicio;
-    private LocalDateTime dataHoraFim;
+    private LocalDate data;
+    private LocalTime horaInicio;
+    private LocalTime horaFim;
 
     @Enumerated(EnumType.STRING)
     private AgendamentoStatus status;

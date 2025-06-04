@@ -13,6 +13,7 @@ import com.deloitte.bootcamp.api_backend.repository.DisponibilidadeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class DisponibilidadeService {
         dto.setId(id);
         dto.setProfissionalId(loggedUser.getId());
 
-        // Verifica sobreposição, ignorando o ID atual para não considerar a própria disponibilidade
+        // chamada de metodo auxiliar, ignora o ID para não considerar a própria disponibilidade
         verificarSobreposicao(
                 dto.getProfissionalId(),
                 dto.getDiaSemana(),
@@ -94,7 +95,7 @@ public class DisponibilidadeService {
         if (!disponibilidade.getProfissional().getId().equals(loggedUser.getId())) {
             throw new AcessoNegadoDisponibilidadeException("Apenas o profissional que criou a disponibilidade pode excluí-la.");
         }
-        disponibilidadeRepository.deleteById(id);
+        disponibilidadeRepository   .deleteById(id);
     }
 
 
@@ -105,9 +106,13 @@ public class DisponibilidadeService {
         List<Disponibilidade> existentes = disponibilidadeRepository
                 .findByProfissionalIdAndDiaSemana(profissionalId, diaSemanaEnum);
 
+        // Converte as Strings para LocalTime
+        LocalTime inicio = LocalTime.parse(horaInicio);
+        LocalTime fim = LocalTime.parse(horaFim);
+
         for (Disponibilidade d : existentes) {
             if (idIgnorar != null && idIgnorar.equals(d.getId())) continue;
-            if (!(horaFim.compareTo(d.getHoraInicio()) <= 0 || horaInicio.compareTo(d.getHoraFim()) >= 0)) {
+            if (!(fim.isBefore(d.getHoraInicio()) || inicio.isAfter(d.getHoraFim()))) {
                 throw new DisponibilidadeSobrepostaException("Conflito de horários para o profissional no dia " + diaSemana);
             }
         }
@@ -125,7 +130,10 @@ public class DisponibilidadeService {
         if (dto.getHoraInicio() == null || dto.getHoraFim() == null) {
             throw new IllegalArgumentException("Horário inicial e final são obrigatórios.");
         }
-        if (dto.getHoraInicio().compareTo(dto.getHoraFim()) >= 0) {
+        // Converta para LocalTime antes de comparar
+        LocalTime inicio = LocalTime.parse(dto.getHoraInicio());
+        LocalTime fim = LocalTime.parse(dto.getHoraFim());
+        if (!inicio.isBefore(fim)) {
             throw new IllegalArgumentException("Horário inicial deve ser antes do horário final.");
         }
     }

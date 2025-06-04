@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalTime;
+
 @Entity
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Disponibilidade {
@@ -21,6 +23,6 @@ public class Disponibilidade {
     @Enumerated(EnumType.STRING)
     private DiaSemana diaSemana;
 
-    private String horaInicio;
-    private String horaFim;
+    private LocalTime horaInicio;
+    private LocalTime horaFim;
 }

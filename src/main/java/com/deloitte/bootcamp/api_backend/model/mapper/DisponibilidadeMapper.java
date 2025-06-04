@@ -5,6 +5,8 @@ import com.deloitte.bootcamp.api_backend.model.entity.Disponibilidade;
 import com.deloitte.bootcamp.api_backend.model.entity.DiaSemana;
 import com.deloitte.bootcamp.api_backend.model.entity.User;
 
+import java.time.LocalTime;
+
 public class DisponibilidadeMapper {
 
     public static DisponibilidadeDTO toDTO(Disponibilidade disponibilidade) {
@@ -15,13 +17,13 @@ public class DisponibilidadeMapper {
                 disponibilidade.getProfissional() != null ? disponibilidade.getProfissional().getId() : null
         );
         String diaSemana = disponibilidade.getDiaSemana() != null ? String.valueOf(disponibilidade.getDiaSemana()) : null;
-        dto.setDiaSemana(diaSemana);  // Só esse campo!
-        dto.setDiasSemana(null); // Não precisa retornar, só serve no cadastro
-        dto.setHoraInicio(disponibilidade.getHoraInicio());
-        dto.setHoraFim(disponibilidade.getHoraFim());
+        dto.setDiaSemana(diaSemana);
+        dto.setDiasSemana(null); // Só usado no POST para múltiplos dias
+        // Converte LocalTime para String
+        dto.setHoraInicio(disponibilidade.getHoraInicio() != null ? disponibilidade.getHoraInicio().toString() : null);
+        dto.setHoraFim(disponibilidade.getHoraFim() != null ? disponibilidade.getHoraFim().toString() : null);
         return dto;
     }
-
 
     public static Disponibilidade toEntity(DisponibilidadeDTO dto) {
         if (dto == null) return null;
@@ -37,8 +39,9 @@ public class DisponibilidadeMapper {
         disponibilidade.setDiaSemana(
                 dto.getDiaSemana() != null ? DiaSemana.valueOf(dto.getDiaSemana()) : null
         );
-        disponibilidade.setHoraInicio(dto.getHoraInicio());
-        disponibilidade.setHoraFim(dto.getHoraFim());
+        // Converte String para LocalTime
+        disponibilidade.setHoraInicio(dto.getHoraInicio() != null ? LocalTime.parse(dto.getHoraInicio()) : null);
+        disponibilidade.setHoraFim(dto.getHoraFim() != null ? LocalTime.parse(dto.getHoraFim()) : null);
         return disponibilidade;
     }
 }
