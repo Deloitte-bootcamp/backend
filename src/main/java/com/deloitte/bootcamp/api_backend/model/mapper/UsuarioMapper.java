@@ -1,18 +1,18 @@
 package com.deloitte.bootcamp.api_backend.model.mapper;
 
-import com.deloitte.bootcamp.api_backend.model.dto.UsuarioDTO;
+import com.deloitte.bootcamp.api_backend.model.dto.UserDTO;
 import com.deloitte.bootcamp.api_backend.model.entity.RoleName;
 import com.deloitte.bootcamp.api_backend.model.entity.User;
 
 
 /**
  * Classe utilitária responsável por mapear (converter) objetos entre a entidade Usuario
- * e o DTO UsuarioDTO.
+ * e o DTO UserDTO.
  *
  * Funções principais:
- * - Converte um objeto Usuario (entidade do banco de dados) em um UsuarioDTO,
+ * - Converte um objeto Usuario (entidade do banco de dados) em um UserDTO,
  *   que é utilizado para transferir dados de forma segura e controlada pela API.
- * - Converte um objeto UsuarioDTO (recebido da API) em uma entidade Usuario,
+ * - Converte um objeto UserDTO (recebido da API) em uma entidade Usuario,
  *   permitindo que os dados sejam persistidos no banco de dados.
  *
  * O uso dessa classe evita o acoplamento direto entre as entidades do domínio e as
@@ -28,40 +28,38 @@ public class UsuarioMapper {
 
 
     /**
-     * Converte um objeto Usuario (entidade) em um UsuarioDTO.
+     * Converte um objeto Usuario (entidade) em um UserDTO.
      * Útil para expor apenas os dados necessários na API.
      *
      * @param usuario Entidade Usuario vinda do banco de dados.
-     * @return UsuarioDTO com os dados convertidos.
+     * @return UserDTO com os dados convertidos.
      */
-    public static UsuarioDTO toDTO(User usuario) {
+    public static UserDTO toDTO(User usuario) {
         if (usuario == null) return null;
-        UsuarioDTO dto = new UsuarioDTO();
+        UserDTO dto = new UserDTO();
         dto.setId(usuario.getId());
         dto.setNome(usuario.getNome());
         dto.setEmail(usuario.getEmail());
-        dto.setSenha(usuario.getPassword());
-        dto.setTipoUsuario(String.valueOf(usuario.getRoleName()))    ; // Converte enum para String
+        dto.setRoleName(String.valueOf(usuario.getRoleName()));    ; // Converte enum para String
         return dto;
     }
 
 
 
     /**
-     * Converte um objeto UsuarioDTO em um Usuario (entidade).
+     * Converte um objeto UserDTO em um Usuario (entidade).
      * Útil para transformar dados recebidos da API em entidade para persistência.
      *
      * @param dto DTO recebido da API.
      * @return Entidade Usuario pronta para ser salva no banco.
      */
-    public static User toEntity(UsuarioDTO dto) {
+    public static User toEntity(UserDTO dto) {
         if (dto == null) return null;
         User usuario = new User();
         usuario.setId(dto.getId());
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
-        usuario.setPassword(dto.getSenha());
-        usuario.setRoleName(RoleName.valueOf(dto.getTipoUsuario())); // Converte String para enum
+        usuario.setRoleName(RoleName.valueOf(dto.getRoleName())); // Converte String para enum
         return usuario;
     }
 }

@@ -31,6 +31,7 @@ public class ServicoController {
 
     @PostMapping("/profissional/{usuarioId}")
     public ResponseEntity<ServicoDTO> criar(@PathVariable Long usuarioId, @RequestBody ServicoDTO dto) {
+        System.out.println("Chegou aqui");
         return servicoService.criarServico(usuarioId, dto);
     }
 

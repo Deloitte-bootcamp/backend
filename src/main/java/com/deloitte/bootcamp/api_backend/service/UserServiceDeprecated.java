@@ -1,6 +1,6 @@
 //package com.deloitte.bootcamp.api_backend.service;
 //
-//import com.deloitte.bootcamp.api_backend.model.dto.UsuarioDTO;
+//import com.deloitte.bootcamp.api_backend.model.dto.UserDTO;
 //import com.deloitte.bootcamp.api_backend.model.entity.RoleName;
 //import com.deloitte.bootcamp.api_backend.model.entity.User;
 //import com.deloitte.bootcamp.api_backend.model.mapper.UsuarioMapper;
@@ -21,23 +21,23 @@
 //
 //    // ============================= GET METHODS =============================
 //
-//    public ResponseEntity<List<UsuarioDTO>> exibirTodosUsuarios() {
+//    public ResponseEntity<List<UserDTO>> exibirTodosUsuarios() {
 //        List<User> usuarios = userRepository.findAll();
-//        List<UsuarioDTO> dtos = usuarios.stream()
+//        List<UserDTO> dtos = usuarios.stream()
 //                .map(UsuarioMapper::toDTO)
 //                .toList();
 //        return ResponseEntity.ok(dtos);
 //    }
 //
-//    public ResponseEntity<UsuarioDTO> buscarPorId(Long id) {
+//    public ResponseEntity<UserDTO> buscarPorId(Long id) {
 //        User usuario = buscarUsuarioEntidadePorId(id);
-//        UsuarioDTO dto = UsuarioMapper.toDTO(usuario);
+//        UserDTO dto = UsuarioMapper.toDTO(usuario);
 //        return ResponseEntity.ok(dto);
 //        }
 //
 //    // ============================= POST METHODS ============================
 //
-//    public ResponseEntity<UsuarioDTO> salvar(UsuarioDTO usuarioDTO) {
+//    public ResponseEntity<UserDTO> salvar(UserDTO usuarioDTO) {
 //        User usuario = UsuarioMapper.toEntity(usuarioDTO);
 //        validarUsuario(usuario);
 //        User salvo = userRepository.save(usuario);
@@ -46,7 +46,7 @@
 //
 //    // ============================= PUT METHODS =============================
 //
-//    public ResponseEntity<UsuarioDTO> atualizar(Long id, UsuarioDTO usuarioDTO) {
+//    public ResponseEntity<UserDTO> atualizar(Long id, UserDTO usuarioDTO) {
 //        User usuarioExistente = buscarUsuarioEntidadePorId(id);
 //        usuarioExistente.setNome(usuarioDTO.getNome());
 //        usuarioExistente.setEmail(usuarioDTO.getEmail());

@@ -1,37 +1,20 @@
 package com.deloitte.bootcamp.api_backend.controller;
 
-import com.deloitte.bootcamp.api_backend.model.dto.UserRegisterDTO;
-import com.deloitte.bootcamp.api_backend.service.register_login.RegisterService;
-
-import jakarta.validation.Valid;
+import com.deloitte.bootcamp.api_backend.model.dto.UserResponseDTO;
+import com.deloitte.bootcamp.api_backend.service.UserServices;
 import lombok.AllArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
-    private final RegisterService registerService;
+    private final UserServices userServices;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody @Valid UserRegisterDTO body) {
-        System.out.println("[DEBUG] Recebido registro: " + body.getEmail());
-        try {
-            registerService.registerUser(body.getEmail(), body.getNome(), body.getPassword(), body.getRoleName());
-            return ResponseEntity.ok("Registered user");
-        }
-        catch (IllegalArgumentException e) {
-            log.warn("Erro ao registrar email de usuário", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @GetMapping("/me")
+    public UserResponseDTO getLoggedUser() {
+        return userServices.getLoggedUser();
     }
 }
