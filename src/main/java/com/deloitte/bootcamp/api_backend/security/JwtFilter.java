@@ -28,7 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
             "/auth/register",
             "/auth/login",
             "/reset/request",
-            "/reset/change"
+            "/reset/change",
+            "/v3/api-docs",
+            "/v3/api-docs/",
+            "/v3/api-docs/*",
+            "/swagger-ui",
+            "/swagger-ui/",
+            "/swagger-ui/*",
+            "/swagger-ui.html"
     );
 
     @Value("${secret_key}")
@@ -47,9 +54,11 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (PUBLIC_PATHS.contains(path)) {
-            filterChain.doFilter(request, response);
-            return;
+        for (String prefix : PUBLIC_PATHS) {
+            if (path.equals(prefix) || path.startsWith(prefix + "/")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {

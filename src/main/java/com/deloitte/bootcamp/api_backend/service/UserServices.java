@@ -30,6 +30,18 @@ public class UserServices {
         }
     }
 
+
+    public User getLoggedUserEntity() {
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            return userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        } catch (org.springframework.security.access.AccessDeniedException ex) {
+            throw new RuntimeException("Acesso negado: usuário não autorizado (403)", ex);
+        }
+    }
+
+
     public User buscarUsuarioEntidadePorId(Long usuarioId) {
         return userRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + usuarioId));
