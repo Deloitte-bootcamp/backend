@@ -3,6 +3,7 @@ package com.deloitte.bootcamp.api_backend.security;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,32 +19,36 @@ public class SecurityConfig {
 
     private JwtFilter jwtFilter;
 
-    // Configuração de segurança para a aplicação e os endpoints
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login", "/user/register").permitAll()
-                        .requestMatchers("/auth/me").authenticated()
+                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/user/me").authenticated()
                         .requestMatchers("/reset/request", "/reset/change").permitAll()
-                        .requestMatchers("/cliente/**").hasRole("CLIENTE")
-                        .requestMatchers("/profissional/**").hasRole("PROFISSIONAL")
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
+                        .requestMatchers("/agendamentos/**").hasRole("CLIENTE")
+                        .requestMatchers("/servicos/**").hasRole("PROFISSIONAL")
+                        .requestMatchers("/auth/me").authenticated()
                 )
                 .addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }
 
-    // Decodificador para senhas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Configuração CORS para permitir requisições de diferentes origens
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -51,8 +56,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*");
+                        .allowedOrigins("http://localhost:4200");
             }
         };
     }

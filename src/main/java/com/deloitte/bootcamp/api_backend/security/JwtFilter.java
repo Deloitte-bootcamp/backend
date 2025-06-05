@@ -25,10 +25,17 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private static final List<String> PUBLIC_PATHS = Arrays.asList(
-            "/user/register",
+            "/auth/register",
             "/auth/login",
             "/reset/request",
-            "/reset/change"
+            "/reset/change",
+            "/v3/api-docs",
+            "/v3/api-docs/",
+            "/v3/api-docs/*",
+            "/swagger-ui",
+            "/swagger-ui/",
+            "/swagger-ui/*",
+            "/swagger-ui.html"
     );
 
     @Value("${secret_key}")
@@ -47,9 +54,11 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (PUBLIC_PATHS.contains(path)) {
-            filterChain.doFilter(request, response);
-            return;
+        for (String prefix : PUBLIC_PATHS) {
+            if (path.equals(prefix) || path.startsWith(prefix + "/")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
         if (request.getMethod().equalsIgnoreCase("OPTIONS")) {
@@ -74,9 +83,8 @@ public class JwtFilter extends OncePerRequestFilter {
                     .parseSignedClaims(token)
                     .getPayload();
 
-            // Extração do nome do usuário
             String username = claims.getSubject();
-            // Extração das roles
+
             String roles = claims.get("roles", String.class);
 
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(
@@ -86,7 +94,6 @@ public class JwtFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(username, null, authorities);
 
-            // Definimos o token no contexto de segurança
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
