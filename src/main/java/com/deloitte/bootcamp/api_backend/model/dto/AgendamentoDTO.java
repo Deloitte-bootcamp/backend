@@ -1,6 +1,7 @@
 package com.deloitte.bootcamp.api_backend.model.dto;
 
 import com.deloitte.bootcamp.api_backend.model.entity.AgendamentoStatus;
+import com.deloitte.bootcamp.api_backend.model.entity.User;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.time.LocalTime;
 public class AgendamentoDTO {
     private Long id;
     private Long clienteId;
-    private Long profissionalId;
+    private String profissionalEmail;
     private Long servicoId;
     private LocalDate data;
     private LocalTime horaInicio;

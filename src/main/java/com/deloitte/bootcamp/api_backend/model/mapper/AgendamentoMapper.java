@@ -29,7 +29,7 @@ public class AgendamentoMapper {
         dto.setHoraInicio(agendamento.getHoraInicio());
         dto.setHoraFim(agendamento.getHoraFim());
         dto.setClienteId(agendamento.getCliente() != null ? agendamento.getCliente().getId() : null);
-        dto.setProfissionalId(agendamento.getProfissional() != null ? agendamento.getProfissional().getId() : null);
+        dto.setProfissionalEmail(agendamento.getProfissional() != null ? agendamento.getProfissional().getEmail() : null);
         dto.setServicoId(agendamento.getServico() != null ? agendamento.getServico().getId() : null);
         dto.setStatus(agendamento.getStatus());
         return dto;

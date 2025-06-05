@@ -28,7 +28,6 @@ public class AgendamentoService {
         return userRepository.findByRoleName("PROFISSIONAL");
     }
 
-
     // Listar agendamentos do cliente
     public List<AgendamentoDTO> listarMeusAgendamentos() {
         var loggedUser = userServices.getLoggedUser();
@@ -70,7 +69,7 @@ public class AgendamentoService {
         }
 
         User cliente = userServices.getLoggedUserEntity();
-        User profissional = userRepository.findById(dto.getProfissionalId()).orElseThrow();
+        User profissional = userRepository.findByEmail(dto.getProfissionalEmail()).orElseThrow();
         Servico servico = servicoRepository.findById(dto.getServicoId()).orElseThrow();
 
         DiaSemana diaSemana = DiaSemana.fromDayOfWeek(dto.getData().getDayOfWeek());

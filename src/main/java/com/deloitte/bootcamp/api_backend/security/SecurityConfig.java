@@ -29,18 +29,14 @@ public class SecurityConfig {
                         .requestMatchers("/user/me").authenticated()
                         .requestMatchers("/reset/request", "/reset/change").permitAll()
                         .requestMatchers(
-                                "/auth/login",
-                                "/user/register",
-                                "/reset/request",
-                                "/reset/change",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-                        .requestMatchers("/cliente/**").hasRole("CLIENTE")
-                        .requestMatchers("/profissional/**").hasRole("PROFISSIONAL")
+                        .requestMatchers("/agendamentos/**").hasRole("CLIENTE")
+                        .requestMatchers("/servicos/**").hasRole("PROFISSIONAL")
                         .requestMatchers("/auth/me").authenticated()
                 )
                 .addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
